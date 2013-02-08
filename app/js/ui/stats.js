@@ -23,8 +23,8 @@ define(
       },
 
       this.after('initialize', function () {
-        this.on(document, 'dataStatsCounted', this.renderStats);
         this.$node.hide();
+        this.on(document, 'dataStatsCounted', this.renderStats);
       });
     }
   }

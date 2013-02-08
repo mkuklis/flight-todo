@@ -3,7 +3,7 @@
 define(
 
   [
-    "./data/add_todo",
+    "./data/todos",
     "./data/stats",
     "./ui/new_todo",
     "./ui/todo_list",
@@ -11,18 +11,18 @@ define(
   ],
   
   function (
-    AddTodoData,
+    TodosData,
     StatsData,
     NewTodoUI, 
     TodoListUI, 
     StatsUI) {
 
     var initialize = function () {
-      AddTodoData.attachTo(document);
       StatsData.attachTo(document);
+      TodosData.attachTo(document);
       NewTodoUI.attachTo('#new-todo');
-      TodoListUI.attachTo('#todo-list');
       StatsUI.attachTo('#footer');
+      TodoListUI.attachTo('#todo-list');
     }
 
     return {

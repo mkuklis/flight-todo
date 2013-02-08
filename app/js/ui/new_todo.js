@@ -24,9 +24,7 @@ define(
         }
 
         this.trigger('uiAddRequested', {
-          title: this.$node.val().trim(),
-          //order: app.Todos.nextOrder(),
-          completed: false
+          title: this.$node.val().trim()
         });
 
         this.$node.val('');
