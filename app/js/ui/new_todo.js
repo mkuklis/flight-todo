@@ -19,7 +19,8 @@ define(
       });
 
       this.createOnEnter = function (e) {
-        if (e.which !== ENTER_KEY || !this.$node.val().trim()) {
+        if (e.which !== ENTER_KEY || 
+            !this.$node.val().trim()) {
           return;
         }
 

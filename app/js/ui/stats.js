@@ -4,13 +4,14 @@ define(
   
   [
     'flight/component',
+    './with_filters',
     'text!app/templates/stats.html',
     '../utils'
   ], 
   
-  function (defineComponent, statsTmpl, utils) {
+  function (defineComponent, withFilters, statsTmpl, utils) {
 
-    return defineComponent(stats);
+    return defineComponent(stats, withFilters);
 
     function stats() {
       var template = utils.tmpl(statsTmpl);

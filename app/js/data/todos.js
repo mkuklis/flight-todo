@@ -39,7 +39,6 @@ define(
 
       this.toggleCompleted = function (e, data) {
         var todo = dataStore.get(data.id);
-
         todo.completed = !todo.completed;
         dataStore.set(todo.id, todo);
         this.trigger('dataTodoToggled', todo);
@@ -47,13 +46,25 @@ define(
 
       this.toggleAllCompleted = function (e, data) {
         var todos = dataStore.getAllValues();
-        
         todos.forEach(function (each) {
           each.completed = data.completed;
           dataStore.set(each.id, each);
         });
 
          this.trigger('dataTodoToggledAll', { todos: todos });
+      },
+
+      this.filter = function (e, data) {
+        var todos = dataStore.getAllValues();
+        var filter = data.filter;
+
+        if (filter) {
+          todos = todos.filter(function (each) {
+            return (typeof each[filter] != "undefined") ? each.completed : !each.completed;
+          });
+        }
+
+        this.trigger('dataTodosFiltered', { todos: todos });
       },
 
       this.clearCompleted = function () {
@@ -66,7 +77,7 @@ define(
 
            return true;
          });
-        
+
         this.trigger('dataClearedCompleted', { todos: filtered });
       },
 
@@ -77,6 +88,7 @@ define(
         this.on(document, 'uiToggleRequested', this.toggleCompleted);
         this.on(document, 'uiToggleAllRequested', this.toggleAllCompleted);
         this.on(document, 'uiClearRequested', this.clearCompleted);
+        this.on(document, 'uiFilterRequested', this.filter);
       });
     }
   }

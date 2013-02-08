@@ -41,6 +41,7 @@ define(
 
       this.toggle = function (e, data) {
         var $todoEl = $(data.el).parents('li');
+        
         $todoEl.toggleClass('completed');
         this.trigger('uiToggleRequested', { id: $todoEl.attr('id') });
       },
@@ -48,8 +49,10 @@ define(
       this.after('initialize', function () {
         this.on(document, 'dataTodoAdded', this.render);
         this.on(document, 'dataTodosLoaded', this.renderAll);
+        this.on(document, 'dataTodosFiltered', this.renderAll);
         this.on(document, 'dataClearedCompleted', this.renderAll);
         this.on(document, 'dataTodoToggledAll', this.renderAll);
+
 
         this.on('click', { 'destroySelector': this.remove });
         this.on('click', { 'toggleSelector': this.toggle });
