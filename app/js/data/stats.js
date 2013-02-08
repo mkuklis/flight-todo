@@ -30,6 +30,9 @@ define(
         this.on(document, 'dataTodosLoaded', this.recount);
         this.on(document, 'dataTodoAdded', this.recount);
         this.on(document, 'dataTodoRemoved', this.recount);
+        this.on(document, 'dataTodoToggled', this.recount);
+        this.on(document, 'dataClearedCompleted', this.recount);
+        this.on(document, 'dataTodoToggledAll', this.recount);
       });
     }
   }

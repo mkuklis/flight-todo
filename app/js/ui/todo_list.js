@@ -16,29 +16,43 @@ define(
       var template = utils.tmpl(todoTmpl);
 
       this.defaultAttrs({
-        destroySelector: 'button.destroy'
+        destroySelector: 'button.destroy',
+        toggleSelector: 'input.toggle'
       });
 
-      this.render = function (e, data) {
+      this.renderAll = function (e, data) {
+        this.$node.html('');
+
         data.todos.forEach(function (each) {
-          this.renderTodo(e, each);
+          this.render(e, each);
         }, this);
       }
 
-      this.renderTodo = function (e, data) {
+      this.render = function (e, data) {
         this.$node.append(template(data));
       },
 
-      this.removeTodo = function (e, data) {
+      this.remove = function (e, data) {
         var $todoEl = $(data.el).parents('li');
+
         this.trigger('uiRemoveRequested', { id: $todoEl.attr('id') });
         $todoEl.remove();
       },
 
+      this.toggle = function (e, data) {
+        var $todoEl = $(data.el).parents('li');
+        $todoEl.toggleClass('completed');
+        this.trigger('uiToggleRequested', { id: $todoEl.attr('id') });
+      },
+
       this.after('initialize', function () {
-        this.on(document, 'dataTodoAdded', this.renderTodo);
-        this.on(document, 'dataTodosLoaded', this.render);
-        this.on('click', { 'destroySelector': this.removeTodo });
+        this.on(document, 'dataTodoAdded', this.render);
+        this.on(document, 'dataTodosLoaded', this.renderAll);
+        this.on(document, 'dataClearedCompleted', this.renderAll);
+        this.on(document, 'dataTodoToggledAll', this.renderAll);
+
+        this.on('click', { 'destroySelector': this.remove });
+        this.on('click', { 'toggleSelector': this.toggle });
 
         this.trigger('uiLoadRequested');
       });
