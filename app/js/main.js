@@ -4,12 +4,12 @@ require.config({
     jquery: 'components/jquery/jquery',
     es5shim: 'components/es5-shim/es5-shim',
     es5sham: 'components/es5-shim/es5-sham',
-    text: 'components/requirejs/plugins/text',
-    store: 'components/store/store.min'
+    text: 'components/requirejs/plugins/text'
   },
   map: {
     '*': {
       'flight/component': 'components/flight/lib/component',
+      'depot': 'components/depot/depot'
     }
   },
   shim: {
@@ -17,7 +17,7 @@ require.config({
       deps: ['jquery', 'es5shim', 'es5sham']
     },
     'app/js/app': {
-      deps: ['components/flight/lib/index', 'store']
+      deps: ['components/flight/lib/index']
     }
   }
 });

@@ -4,7 +4,7 @@ define(
   
   [
     'flight/component',
-    'store'
+    '../store'
   ], 
   
   function (defineComponent, dataStore) {
@@ -14,71 +14,74 @@ define(
     function todos() {
 
       this.add = function (e, data) {
-        var todo = {
-          id: String(Date.now()),
+        var todo = dataStore.save({
           title: data.title,
           completed: false
-        };
+        });
 
-        dataStore.set(todo.id, todo);
         this.trigger('dataTodoAdded', todo);
       },
 
       this.remove = function (e, data) {
-        var todo = dataStore.get(data.id);
-
-        dataStore.remove(data.id);
+        var todo = dataStore.destroy(data.id);
         this.trigger('dataTodoRemoved', todo);
       },
 
-      this.load = function () {
-        var todos = dataStore.getAllValues();
+      this.load = function (e, data) {
+        var filter = localStorage.getItem('filter');
+        var todos = this.find(filter);
 
         this.trigger('dataTodosLoaded', { todos: todos });
       },
 
       this.toggleCompleted = function (e, data) {
         var todo = dataStore.get(data.id);
+
         todo.completed = !todo.completed;
-        dataStore.set(todo.id, todo);
-        this.trigger('dataTodoToggled', todo);
+        dataStore.save(todo);
+
+        var filter = localStorage.getItem('filter');
+        var eventType = (filter) ? 'dataTodoRemoved' : 'dataTodoToggled';
+
+        this.trigger(eventType, todo);
       },
 
       this.toggleAllCompleted = function (e, data) {
-        var todos = dataStore.getAllValues();
-        todos.forEach(function (each) {
-          each.completed = data.completed;
-          dataStore.set(each.id, each);
-        });
-
-         this.trigger('dataTodoToggledAll', { todos: todos });
+        dataStore.updateAll({ completed: data.completed });
+        var filter = localStorage.getItem('filter');
+        this.trigger('dataTodoToggledAll', { todos: this.find(filter) });
       },
 
       this.filter = function (e, data) {
-        var todos = dataStore.getAllValues();
-        var filter = data.filter;
+        var todos;
 
-        if (filter) {
-          todos = todos.filter(function (each) {
-            return (typeof each[filter] != "undefined") ? each.completed : !each.completed;
-          });
-        }
+        todos = this.find(data.filter);
+        localStorage.setItem('filter', data.filter);
 
         this.trigger('dataTodosFiltered', { todos: todos });
       },
 
+      this.find = function (filter) {
+        var todos;
+
+        if (filter) {
+          todos = dataStore.find(function (each) {
+            return (typeof each[filter] != "undefined") ? each.completed : !each.completed;
+          });
+        }
+        else {
+          todos = dataStore.all();
+        }
+
+        return todos;
+      },
+
       this.clearCompleted = function () {
-         var todos = dataStore.getAllValues();
-         var filtered = todos.filter(function (each) {
-           if (each.completed) {
-            dataStore.remove(each.id);
-            return false;
-           }
+        var todos;
 
-           return true;
-         });
-
-        this.trigger('dataClearedCompleted', { todos: filtered });
+        dataStore.destroyAll({ completed: true });
+        todos = dataStore.all();
+        this.trigger('dataClearedCompleted', { todos: todos });
       },
 
       this.after('initialize', function () {

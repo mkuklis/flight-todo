@@ -4,7 +4,7 @@ define(
   
   [
     'flight/component',
-    'store'
+    '../store'
   ], 
 
   function (defineComponent, dataStore) {
@@ -13,7 +13,7 @@ define(
 
     function stats() {
       this.recount = function () {
-        var todos = dataStore.getAllValues();
+        var todos = dataStore.all();
         var all = todos.length;
         var remaining = todos.reduce(function (memo, each) {
           return memo += (each.completed) ? 0 : 1;

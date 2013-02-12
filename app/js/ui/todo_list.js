@@ -32,10 +32,13 @@ define(
         this.$node.append(template(data));
       },
 
-      this.remove = function (e, data) {
+      this.requestRemove = function (e, data) {
         var $todoEl = $(data.el).parents('li');
-
         this.trigger('uiRemoveRequested', { id: $todoEl.attr('id') });
+      },
+
+      this.remove = function (e, data) {
+        var $todoEl = this.$node.find("#" + data.id);
         $todoEl.remove();
       },
 
@@ -53,8 +56,9 @@ define(
         this.on(document, 'dataClearedCompleted', this.renderAll);
         this.on(document, 'dataTodoToggledAll', this.renderAll);
 
+        this.on(document, 'dataTodoRemoved', this.remove);
 
-        this.on('click', { 'destroySelector': this.remove });
+        this.on('click', { 'destroySelector': this.requestRemove });
         this.on('click', { 'toggleSelector': this.toggle });
 
         this.trigger('uiLoadRequested');
