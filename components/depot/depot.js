@@ -29,8 +29,11 @@
       }
 
       id = record[this.idAttribute];
-
-      if (this.ids.indexOf(id) < 0) {
+      
+      if (this.ids.indexOf(id) >= 0) {
+        record = extend(this.get(id), record);
+      }
+      else {
         this.ids.push(id);
         localStorage.setItem(this.name, this.ids.join(","));
       }

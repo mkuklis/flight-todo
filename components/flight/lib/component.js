@@ -1,3 +1,9 @@
+// ==========================================
+// Copyright 2013 Twitter, Inc
+// Licensed under The MIT License
+// http://opensource.org/licenses/MIT
+// ==========================================
+
 "use strict";
 
 define(
@@ -10,6 +16,9 @@ define(
   ],
 
   function(advice, utils, compose, registry) {
+
+    var functionNameRegEx = /function (.*?)\s?\(/;
+    var spaceCommaRegEx = /\s\,/g;
 
     function teardownInstance(instanceInfo){
       instanceInfo.events.slice().forEach(function(event) {
@@ -24,8 +33,8 @@ define(
 
 
     function teardown() {
+      this.trigger("componentTearDown");
       teardownInstance(registry.findInstanceInfo(this));
-      this.trigger("componentTornDown");
     }
 
     //teardown for all instances of this constructor
@@ -86,14 +95,19 @@ define(
           originalCb = args.pop();
         }
 
-        callback = originalCb && originalCb.bind(this);
-        callback.target = originalCb;
-
         $element = (args.length == 2) ? $(args.shift()) : this.$node;
         type = args[0];
 
-        if (typeof callback == 'undefined') {
-          throw new Error("Unable to bind to '" + type + "' because the given callback is undefined");
+        if (typeof originalCb != 'function' && typeof originalCb != 'object') {
+          throw new Error("Unable to bind to '" + type + "' because the given callback is not a function or an object");
+        }
+
+        callback = originalCb.bind(this);
+        callback.target = originalCb;
+
+        // if the original callback is already branded by jQuery's guid, copy it to the context-bound version
+        if (originalCb.guid) {
+          callback.guid = originalCb.guid;
         }
 
         $element.on(type, callback);
@@ -167,12 +181,12 @@ define(
       Component.toString = function() {
         var prettyPrintMixins = mixins.map(function(mixin) {
           if ($.browser.msie) {
-            var m = mixin.toString().match(/function (.*?)\s?\(/);
+            var m = mixin.toString().match(functionNameRegEx);
             return (m && m[1]) ? m[1] : "";
           } else {
             return mixin.name;
           }
-        }).join(', ').replace(/\s\,/g,'');//weed out no-named mixins
+        }).join(', ').replace(spaceCommaRegEx,'');//weed out no-named mixins
 
         return prettyPrintMixins;
       };

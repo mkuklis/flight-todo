@@ -22,7 +22,8 @@ define(
         this.trigger('dataStatsCounted', {
           all: all,
           remaining: remaining,
-          completed: all - remaining
+          completed: all - remaining,
+          filter: localStorage.getItem('filter') || ""
         });
       },
 

@@ -23,7 +23,5 @@ require.config({
 });
 
 require(['app/js/app'], function (App) {
-  //var mixins = [flight.advice.withAdvice, flight.logger];
-  //flight.compose.mixin(flight.registry, mixins);
   App.initialize();
 });

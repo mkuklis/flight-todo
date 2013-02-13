@@ -13,6 +13,8 @@ define(
 
     function todos() {
 
+      var filter;
+
       this.add = function (e, data) {
         var todo = dataStore.save({
           title: data.title,
@@ -24,44 +26,50 @@ define(
 
       this.remove = function (e, data) {
         var todo = dataStore.destroy(data.id);
+
         this.trigger('dataTodoRemoved', todo);
       },
 
       this.load = function (e, data) {
-        var filter = localStorage.getItem('filter');
-        var todos = this.find(filter);
+        var todos;
 
+        filter = localStorage.getItem('filter');
+        todos = this.find();
         this.trigger('dataTodosLoaded', { todos: todos });
       },
 
+      this.update = function (e, data) {
+        dataStore.save(data);
+      },
+
       this.toggleCompleted = function (e, data) {
+        var eventType;
         var todo = dataStore.get(data.id);
 
         todo.completed = !todo.completed;
         dataStore.save(todo);
 
-        var filter = localStorage.getItem('filter');
-        var eventType = (filter) ? 'dataTodoRemoved' : 'dataTodoToggled';
+        eventType = (filter) ? 'dataTodoRemoved' : 'dataTodoToggled';
 
         this.trigger(eventType, todo);
       },
 
       this.toggleAllCompleted = function (e, data) {
         dataStore.updateAll({ completed: data.completed });
-        var filter = localStorage.getItem('filter');
         this.trigger('dataTodoToggledAll', { todos: this.find(filter) });
       },
 
       this.filter = function (e, data) {
         var todos;
 
-        todos = this.find(data.filter);
         localStorage.setItem('filter', data.filter);
+        filter = data.filter;
+        todos = this.find();
 
         this.trigger('dataTodosFiltered', { todos: todos });
       },
 
-      this.find = function (filter) {
+      this.find = function () {
         var todos;
 
         if (filter) {
@@ -86,6 +94,7 @@ define(
 
       this.after('initialize', function () {
         this.on(document, 'uiAddRequested', this.add);
+        this.on(document, 'uiUpdateRequested', this.update);
         this.on(document, 'uiRemoveRequested', this.remove);
         this.on(document, 'uiLoadRequested', this.load);
         this.on(document, 'uiToggleRequested', this.toggleCompleted);

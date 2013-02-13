@@ -19,17 +19,12 @@ define(
         this.trigger("uiFilterRequested", { filter: filter }); 
       }
 
-      this.markSelected = function () {
-        var filter = localStorage.getItem('filter');
+      this.markSelected = function (filter) {
         this.$node.find('[href="#/' + filter + '"]').addClass('selected');
       },
 
       this.after("initialize", function() {
-        this.on('click', {
-          filterSelector: this.chooseFilter
-        });
-
-        this.on(document, 'dataTodosLoaded', this.markSelected);
+        this.on('click', { filterSelector: this.chooseFilter });
       });
     }
   }

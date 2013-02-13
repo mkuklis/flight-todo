@@ -25,7 +25,7 @@ define(
 
         this.$node.html(template(data));
         this.$node.toggle(toggle);
-        this.markSelected();
+        this.markSelected(data.filter);
       },
 
       this.clearCompleted = function (e, data) {
