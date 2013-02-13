@@ -5,7 +5,7 @@ define(
   [
     "./data/todos",
     "./data/stats",
-    "./ui/new_todo",
+    "./ui/new_item",
     "./ui/todo_list",
     "./ui/stats",
     "./ui/toggle_all"
@@ -14,7 +14,7 @@ define(
   function (
     TodosData,
     StatsData,
-    NewTodoUI, 
+    NewItemUI, 
     TodoListUI,
     StatsUI,
     ToggleAllUI) {
@@ -22,7 +22,7 @@ define(
     var initialize = function () {
       StatsData.attachTo(document);
       TodosData.attachTo(document);
-      NewTodoUI.attachTo('#new-todo');
+      NewItemUI.attachTo('#new-todo');
       StatsUI.attachTo('#footer');
       ToggleAllUI.attachTo('#toggle-all');
       TodoListUI.attachTo('#todo-list');

@@ -26,11 +26,11 @@ define(
         this.$node.html(template(data));
         this.$node.toggle(toggle);
         this.markSelected(data.filter);
-      },
+      }
 
       this.clearCompleted = function (e, data) {
         this.trigger('uiClearRequested');
-      },
+      }
 
       this.after('initialize', function () {
         this.$node.hide();

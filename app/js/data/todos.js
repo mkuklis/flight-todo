@@ -22,13 +22,13 @@ define(
         });
 
         this.trigger('dataTodoAdded', todo);
-      },
+      }
 
       this.remove = function (e, data) {
         var todo = dataStore.destroy(data.id);
 
         this.trigger('dataTodoRemoved', todo);
-      },
+      }
 
       this.load = function (e, data) {
         var todos;
@@ -36,11 +36,11 @@ define(
         filter = localStorage.getItem('filter');
         todos = this.find();
         this.trigger('dataTodosLoaded', { todos: todos });
-      },
+      }
 
       this.update = function (e, data) {
         dataStore.save(data);
-      },
+      }
 
       this.toggleCompleted = function (e, data) {
         var eventType;
@@ -52,12 +52,12 @@ define(
         eventType = (filter) ? 'dataTodoRemoved' : 'dataTodoToggled';
 
         this.trigger(eventType, todo);
-      },
+      }
 
       this.toggleAllCompleted = function (e, data) {
         dataStore.updateAll({ completed: data.completed });
         this.trigger('dataTodoToggledAll', { todos: this.find(filter) });
-      },
+      }
 
       this.filter = function (e, data) {
         var todos;
@@ -67,7 +67,7 @@ define(
         todos = this.find();
 
         this.trigger('dataTodosFiltered', { todos: todos });
-      },
+      }
 
       this.find = function () {
         var todos;
@@ -82,7 +82,7 @@ define(
         }
 
         return todos;
-      },
+      }
 
       this.clearCompleted = function () {
         var todos;
@@ -90,7 +90,7 @@ define(
         dataStore.destroyAll({ completed: true });
         todos = dataStore.all();
         this.trigger('dataClearedCompleted', { todos: todos });
-      },
+      }
 
       this.after('initialize', function () {
         this.on(document, 'uiAddRequested', this.add);

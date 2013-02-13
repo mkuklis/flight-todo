@@ -21,7 +21,7 @@ define(
 
       this.markSelected = function (filter) {
         this.$node.find('[href="#/' + filter + '"]').addClass('selected');
-      },
+      }
 
       this.after("initialize", function() {
         this.on('click', { filterSelector: this.chooseFilter });

@@ -2,7 +2,7 @@
   <div class="view">
     <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
     <label><%= title %></label>
-    <button class="destroy"></button>
+    <button id="destroy_<%= id %>" class="destroy"></button>
   </div>
   <input class="edit" value="<%= title %>">
 </li>

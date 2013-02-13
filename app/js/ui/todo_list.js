@@ -27,20 +27,18 @@ define(
         data.todos.forEach(function (each) {
           this.render(e, each);
         }, this);
-
-        this.on('blur', { 'editSelector': this.requestUpdate });
       }
 
       this.render = function (e, data) {
         this.$node.append(template(data));
-      },
+      }
 
       this.edit = function (e, data) {
         var $todoEl = $(data.el).parents('li');
 
         $todoEl.addClass('editing');
         this.select('editSelector').focus();
-      },
+      }
 
       this.requestUpdate = function (e) {
         var $inputEl = $(e.currentTarget);
@@ -51,30 +49,30 @@ define(
           $todoEl.find('label').html(value);
           this.trigger('uiUpdateRequested', { 
             id: $todoEl.attr('id'), 
-            label: value });
+            title: value });
         } else {
           this.trigger('uiRemoveRequested', { id: $todoEl.attr('id') });
         }
 
         $todoEl.removeClass('editing');
-      },
+      }
 
       this.requestRemove = function (e, data) {
-        var $todoEl = $(data.el).parents('li');
-        this.trigger('uiRemoveRequested', { id: $todoEl.attr('id') });
-      },
+        var id = $(data.el).attr('id').split('_')[1];
+        this.trigger('uiRemoveRequested', { id: id });
+      }
 
       this.remove = function (e, data) {
         var $todoEl = this.$node.find("#" + data.id);
         $todoEl.remove();
-      },
+      }
 
       this.toggle = function (e, data) {
         var $todoEl = $(data.el).parents('li');
 
         $todoEl.toggleClass('completed');
         this.trigger('uiToggleRequested', { id: $todoEl.attr('id') });
-      },
+      }
 
       this.after('initialize', function () {
         this.on(document, 'dataTodoAdded', this.render);
@@ -92,7 +90,7 @@ define(
 
         // these don't work
         // this.on(this.attr.editSelector, 'blur', this.requestUpdate);
-        // this.on('dblclick', { 'labelSelector': this.edit });
+        // this.on('blur', { 'editSelector': this.requestUpdate });
 
         this.trigger('uiLoadRequested');
       });

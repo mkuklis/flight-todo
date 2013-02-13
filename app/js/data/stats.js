@@ -25,7 +25,7 @@ define(
           completed: all - remaining,
           filter: localStorage.getItem('filter') || ""
         });
-      },
+      }
 
       this.after('initialize', function () {
         this.on(document, 'dataTodosLoaded', this.recount);

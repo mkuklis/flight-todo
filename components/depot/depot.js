@@ -29,7 +29,7 @@
       }
 
       id = record[this.idAttribute];
-      
+
       if (this.ids.indexOf(id) >= 0) {
         record = extend(this.get(id), record);
       }
