@@ -27,12 +27,17 @@ define(
 			this.renderAll = function (e, data) {
 				this.$node.html('');
 				data.todos.forEach(function (each) {
-					this.render(e, each);
+					this.render(e, { todo: each });
 				}, this);
 			}
 
 			this.render = function (e, data) {
-				this.$node.append(template(data));
+				if (e.type == "dataTodoAdded"
+				    && data.filter == 'completed') {
+					return;
+				}
+
+				this.$node.append(template(data.todo));
 			}
 
 			this.edit = function (e, data) {

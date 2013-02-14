@@ -21,7 +21,7 @@ define(
                     completed: false
                 });
 
-                this.trigger('dataTodoAdded', todo);
+                this.trigger('dataTodoAdded', { todo: todo, filter: filter });
             }
 
             this.remove = function (e, data) {
