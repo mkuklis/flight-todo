@@ -1,99 +1,111 @@
 'use strict';
 
 define(
-  
-  [
-    'flight/component',
-    'text!app/templates/todo.html',
-    '../utils'
-  ], 
 
-  function (defineComponent, todoTmpl, utils) {
+	[
+		'flight/component',
+		'text!app/templates/todo.html',
+		'../utils'
+	],
 
-    return defineComponent(todoList);
+	function (defineComponent, todoTmpl, utils) {
 
-    function todoList() {
-      var template = utils.tmpl(todoTmpl);
+		return defineComponent(todoList);
 
-      this.defaultAttrs({
-        destroySelector: 'button.destroy',
-        toggleSelector: 'input.toggle',
-        labelSelector: 'label',
-        editSelector: 'input.edit'
-      });
+		function todoList() {
 
-      this.renderAll = function (e, data) {
-        this.$node.html('');
-        data.todos.forEach(function (each) {
-          this.render(e, each);
-        }, this);
-      }
+			var ENTER_KEY = 13;
+			var template = utils.tmpl(todoTmpl);
 
-      this.render = function (e, data) {
-        this.$node.append(template(data));
-      }
+			this.defaultAttrs({
+				destroySelector: 'button.destroy',
+				toggleSelector: 'input.toggle',
+				labelSelector: 'label',
+				editSelector: '.edit'
+			});
 
-      this.edit = function (e, data) {
-        var $todoEl = $(data.el).parents('li');
+			this.renderAll = function (e, data) {
+				this.$node.html('');
+				data.todos.forEach(function (each) {
+					this.render(e, each);
+				}, this);
+			}
 
-        $todoEl.addClass('editing');
-        this.select('editSelector').focus();
-      }
+			this.render = function (e, data) {
+				this.$node.append(template(data));
+			}
 
-      this.requestUpdate = function (e) {
-        var $inputEl = $(e.currentTarget);
-        var $todoEl =  $inputEl.parents('li');
-        var value = $inputEl.val().trim();
+			this.edit = function (e, data) {
+				var $todoEl = $(data.el).parents('li');
 
-        if (value) {
-          $todoEl.find('label').html(value);
-          this.trigger('uiUpdateRequested', { 
-            id: $todoEl.attr('id'), 
-            title: value });
-        } else {
-          this.trigger('uiRemoveRequested', { id: $todoEl.attr('id') });
-        }
+				$todoEl.addClass('editing');
+				this.select('editSelector').focus();
+			}
 
-        $todoEl.removeClass('editing');
-      }
+			this.requestUpdate = function (e, data) {
+				var $inputEl = $(e.currentTarget);
+				var $todoEl =  $inputEl.parents('li');
+				var value = $inputEl.val().trim();
+				var id =  $todoEl.attr('id');
 
-      this.requestRemove = function (e, data) {
-        var id = $(data.el).attr('id').split('_')[1];
-        this.trigger('uiRemoveRequested', { id: id });
-      }
+				if (!$todoEl.hasClass('editing')) {
+					return;
+				}
 
-      this.remove = function (e, data) {
-        var $todoEl = this.$node.find("#" + data.id);
-        $todoEl.remove();
-      }
+				!$todoEl.removeClass('editing');
 
-      this.toggle = function (e, data) {
-        var $todoEl = $(data.el).parents('li');
+				if (value) {
+					$todoEl.find('label').html(value);
+					this.trigger('uiUpdateRequested',  { id: id, title: value });
+				} else {
+					this.trigger('uiRemoveRequested', { id: id });
+				}
+			},
 
-        $todoEl.toggleClass('completed');
-        this.trigger('uiToggleRequested', { id: $todoEl.attr('id') });
-      }
+			this.requestUpdateOnEnter = function (e, data) {
+				if (e.which === ENTER_KEY) {
+					this.requestUpdate(e, data);
+				}
+			},
 
-      this.after('initialize', function () {
-        this.on(document, 'dataTodoAdded', this.render);
-        this.on(document, 'dataTodosLoaded', this.renderAll);
-        this.on(document, 'dataTodosFiltered', this.renderAll);
-        this.on(document, 'dataClearedCompleted', this.renderAll);
-        this.on(document, 'dataTodoToggledAll', this.renderAll);
-        this.on(document, 'dataTodoRemoved', this.remove);
+			this.requestRemove = function (e, data) {
+				var id = $(data.el).attr('id').split('_')[1];
+				this.trigger('uiRemoveRequested', { id: id });
+			}
 
-        this.on('click', { 'destroySelector': this.requestRemove });
-        this.on('click', { 'toggleSelector': this.toggle });
-        this.on('dblclick', { 'labelSelector': this.edit });
+			this.remove = function (e, data) {
+				var $todoEl = this.$node.find('#' + data.id);
+				$todoEl.remove();
+			}
 
-        this.$node.on('blur', 'input', this.bind(this.requestUpdate));
+			this.toggle = function (e, data) {
+				var $todoEl = $(data.el).parents('li');
 
-        // these don't work
-        // this.on(this.attr.editSelector, 'blur', this.requestUpdate);
-        // this.on('blur', { 'editSelector': this.requestUpdate });
+				$todoEl.toggleClass('completed');
+				this.trigger('uiToggleRequested', { id: $todoEl.attr('id') });
+			}
 
-        this.trigger('uiLoadRequested');
-      });
-    }
-  }
+			this.after('initialize', function () {
+				this.on(document, 'dataTodoAdded', this.render);
+				this.on(document, 'dataTodosLoaded', this.renderAll);
+				this.on(document, 'dataTodosFiltered', this.renderAll);
+				this.on(document, 'dataClearedCompleted', this.renderAll);
+				this.on(document, 'dataTodoToggledAll', this.renderAll);
+				this.on(document, 'dataTodoRemoved', this.remove);
+
+				this.on('click', { 'destroySelector': this.requestRemove });
+				this.on('click', { 'toggleSelector': this.toggle });
+				this.on('dblclick', { 'labelSelector': this.edit });
+
+				this.$node.on('blur', '.edit', this.bind(this.requestUpdate));
+				this.$node.on('keydown', '.edit', this.bind(this.requestUpdateOnEnter));
+
+				// these don't work
+				// this.on(this.attr.editSelector, 'blur', this.requestUpdate);
+				// this.on('blur', { 'editSelector': this.requestUpdate });
+
+				this.trigger('uiLoadRequested');
+			});
+		}
+	}
 );

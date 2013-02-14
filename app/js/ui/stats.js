@@ -1,42 +1,42 @@
 'use strict';
 
 define(
-  
-  [
-    'flight/component',
-    './with_filters',
-    'text!app/templates/stats.html',
-    '../utils'
-  ], 
-  
-  function (defineComponent, withFilters, statsTmpl, utils) {
 
-    return defineComponent(stats, withFilters);
+	[
+		'flight/component',
+		'./with_filters',
+		'text!app/templates/stats.html',
+		'../utils'
+	],
 
-    function stats() {
-      var template = utils.tmpl(statsTmpl);
+	function (defineComponent, withFilters, statsTmpl, utils) {
 
-      this.defaultAttrs({
-        clearCompletedSelector: '#clear-completed'
-      });
+		return defineComponent(stats, withFilters);
 
-      this.render = function (e, data) {
-        var toggle = data.all > 0;
+		function stats() {
+			var template = utils.tmpl(statsTmpl);
 
-        this.$node.html(template(data));
-        this.$node.toggle(toggle);
-        this.markSelected(data.filter);
-      }
+			this.defaultAttrs({
+				clearCompletedSelector: '#clear-completed'
+			});
 
-      this.clearCompleted = function (e, data) {
-        this.trigger('uiClearRequested');
-      }
+			this.render = function (e, data) {
+				var toggle = data.all > 0;
 
-      this.after('initialize', function () {
-        this.$node.hide();
-        this.on(document, 'dataStatsCounted', this.render);
-        this.on('click', { 'clearCompletedSelector': this.clearCompleted });
-      });
-    }
-  }
+				this.$node.html(template(data));
+				this.$node.toggle(toggle);
+				this.markSelected(data.filter);
+			}
+
+			this.clearCompleted = function (e, data) {
+				this.trigger('uiClearRequested');
+			}
+
+			this.after('initialize', function () {
+				this.$node.hide();
+				this.on(document, 'dataStatsCounted', this.render);
+				this.on('click', { 'clearCompletedSelector': this.clearCompleted });
+			});
+		}
+	}
 );

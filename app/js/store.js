@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
 define(
-  
-  [
-    "depot"
-  ],
 
-  function (depot) {
-    return depot('todos', { idAttribute: 'id' });
-  }
+	[
+		'depot'
+	],
+
+	function (depot) {
+		return depot('todos', { idAttribute: 'id' });
+	}
 );

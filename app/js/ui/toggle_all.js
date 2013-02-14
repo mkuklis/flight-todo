@@ -2,29 +2,29 @@
 
 define(
 
-  [
-    'flight/component'
-  ], 
-  
-  function (defineComponent) {
+	[
+		'flight/component'
+	],
 
-    return defineComponent(toggleAll);
+	function (defineComponent) {
 
-    function toggleAll() {
-      this.toggleAllComplete = function () {
-        this.trigger('uiToggleAllRequested', { 
-          completed: this.$node.is(':checked') 
-        });
-      }
+		return defineComponent(toggleAll);
 
-      this.toggleCheckbox = function (e, data) {
-        this.$node[0].checked = !data.remaining;
-      }
+		function toggleAll() {
+			this.toggleAllComplete = function () {
+				this.trigger('uiToggleAllRequested', {
+					completed: this.$node.is(':checked')
+				});
+			}
 
-      this.after('initialize', function () {
-        this.on('click', this.toggleAllComplete);
-        this.on(document, 'dataStatsCounted', this.toggleCheckbox);
-      });
-    }
-  }
+			this.toggleCheckbox = function (e, data) {
+				this.$node[0].checked = !data.remaining;
+			}
+
+			this.after('initialize', function () {
+				this.on('click', this.toggleAllComplete);
+				this.on(document, 'dataStatsCounted', this.toggleCheckbox);
+			});
+		}
+	}
 );

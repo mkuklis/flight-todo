@@ -2,34 +2,34 @@
 
 define(
 
-  [
-    'flight/component'
-  ], 
-  
-  function (defineComponent) {
+	[
+		'flight/component'
+	],
 
-    return defineComponent(newItem);
+	function (defineComponent) {
 
-    function newItem() {
+		return defineComponent(newItem);
 
-      var ENTER_KEY = 13;
+		function newItem() {
 
-      this.createOnEnter = function (e) {
-        if (e.which !== ENTER_KEY || 
-            !this.$node.val().trim()) {
-          return;
-        }
+			var ENTER_KEY = 13;
 
-        this.trigger('uiAddRequested', {
-          title: this.$node.val().trim()
-        });
+			this.createOnEnter = function (e) {
+				if (e.which !== ENTER_KEY ||
+					!this.$node.val().trim()) {
+					return;
+				}
 
-        this.$node.val('');
-      }
+				this.trigger('uiAddRequested', {
+					title: this.$node.val().trim()
+				});
 
-      this.after('initialize', function () {
-        this.on('keydown', this.createOnEnter);
-      });
-    }
-  }
+				this.$node.val('');
+			}
+
+			this.after('initialize', function () {
+				this.on('keydown', this.createOnEnter);
+			});
+		}
+	}
 );
