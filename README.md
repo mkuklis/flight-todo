@@ -1,8 +1,11 @@
 ##flight-todo
 
 
-[Todo](http://addyosmani.github.com/todomvc/) application implemented using [Twitter Flight](http://twitter.github.com/flight/).
+Todo application implemented using [Twitter Flight](http://twitter.github.com/flight/).
 
+### TodoMVC
 
-#### Demo
-You can find running demo [here](http://mkuklis.github.com/flight-todo).
+This app is now included in [TodoMVC](http://addyosmani.github.com/todomvc/).
+
+* [Source](https://github.com/addyosmani/todomvc/tree/gh-pages/dependency-examples/flight)
+* [Demo](http://todomvc.com/dependency-examples/flight/)
