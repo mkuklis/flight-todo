@@ -48,7 +48,7 @@ define(
 			}
 
 			this.requestUpdate = function (e, data) {
-				var $inputEl = $(e.currentTarget);
+				var $inputEl = $(data.el);
 				var $todoEl =  $inputEl.parents('li');
 				var value = $inputEl.val().trim();
 				var id =  $todoEl.attr('id');
@@ -74,6 +74,7 @@ define(
 			},
 
 			this.requestRemove = function (e, data) {
+
 				var id = $(data.el).attr('id').split('_')[1];
 				this.trigger('uiRemoveRequested', { id: id });
 			}
@@ -101,13 +102,8 @@ define(
 				this.on('click', { 'destroySelector': this.requestRemove });
 				this.on('click', { 'toggleSelector': this.toggle });
 				this.on('dblclick', { 'labelSelector': this.edit });
-
-				this.$node.on('blur', '.edit', this.bind(this.requestUpdate));
-				this.$node.on('keydown', '.edit', this.bind(this.requestUpdateOnEnter));
-
-				// these don't work
-				// this.on(this.attr.editSelector, 'blur', this.requestUpdate);
-				// this.on('blur', { 'editSelector': this.requestUpdate });
+        this.on('keydown', { 'editSelector': this.requestUpdateOnEnter });
+        this.on('focusout', { 'editSelector': this.requestUpdate });
 
 				this.trigger('uiLoadRequested');
 			});
